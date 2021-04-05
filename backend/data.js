@@ -6,7 +6,8 @@ export default {
         image: "../images/d3.jpg",
         price: 100,
         rating: 4.5,
-        numReviews: 10
+        numReviews: 10,
+        countInStock: 6
     },
     {
         _id:'2',
@@ -15,7 +16,8 @@ export default {
         image: "../images/d1.jpg",
         price: 250,
         rating: 4,
-        numReviews: 10
+        numReviews: 10,
+        countInStock: 0
     },
     {
         _id:'3',
@@ -24,6 +26,7 @@ export default {
         image: "../images/d2.jpg",
         price: 1200,
         rating: 4.8,
-        numReviews: 10
+        numReviews: 10,
+        countInStock: 20
     }]
 }
