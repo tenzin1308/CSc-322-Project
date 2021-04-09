@@ -15,6 +15,7 @@ router.post('/signin', async(req, res) =>{
             name: signinUser.name,
             email: signinUser.email,
             isAdmin: signinUser.isAdmin,
+            isBlocked: signinUser.isBlocked,
             token: getToken(signinUser)
         })
 
@@ -35,7 +36,8 @@ router.post('/register', async(req, res) =>{
             _id: newUser.id,
             name: newUser.name,
             email: newUser.email,
-            isAdmin: newUser .isAdmin,
+            isAdmin: newUser.isAdmin,
+            isBlocked: newUser.isBlocked,
             token: getToken(newUser)
         })
 
@@ -48,9 +50,10 @@ router.get("/createadmin", async (req, res) =>{
     try {
         const user = new User({
             name: 'Ten',
-            email: 'ten11-admin@futuretech.com',
+            email: 'ten-admin@futuretech.com',
             password : '12345',
-            isAdmin: true
+            isAdmin: true,
+            isBlocked: false
         });
         const newUser = await user.save();
         res.send(newUser);
