@@ -32,7 +32,7 @@ function SigninScreen (props){
                 </li>
                 <li>
                     {loading && <div>Loading...</div>}
-                    {error && <div>{error}</div>}
+                    {error && <div>{error.split(" ").pop() === "405" ? "Sorry your account is Blocked!" : error}</div>}
                 </li>
                 <li>
                     <label htmlFor="email">
