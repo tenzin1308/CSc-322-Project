@@ -16,6 +16,11 @@ export default function ProductScreen(props) {
   const userSignin = useSelector((state) => state.userSignin);
   const { userInfo } = userSignin;
 
+  // Filter
+  const Filter = require('bad-words'),
+  filter = new Filter();
+
+
   const productReviewCreate = useSelector((state) => state.productReviewCreate);
   const {
     loading: loadingReviewCreate,
@@ -188,10 +193,11 @@ export default function ProductScreen(props) {
                     </div>
                     <div>
                       <label htmlFor="comment">Comment</label>
+
                       <textarea
                         id="comment"
                         value={comment}
-                        onChange={(e) => setComment(e.target.value)}
+                        onChange={(e) => setComment(filter.clean(e.target.value))}
                       ></textarea>
                     </div>
                     <div>
