@@ -9,8 +9,8 @@ const data = {
       isAdmin: true,
       isSeller: true,
       seller: {
-        name: 'Puma',
-        logo: '/images/logo.png',
+        name: '',
+        logo: '/images/*.png',
         description: 'best seller',
         rating: 4.5,
         numReviews: 120,
@@ -19,12 +19,12 @@ const data = {
   ],
   products: [
     {
-      name: 'Nike Slim Shirt',
-      category: 'Shirts',
+      name: 'Corsair HX 750',
+      category: 'Power Supply',
       image: '/images/p1.jpg',
       price: 120,
       countInStock: 10,
-      brand: 'Nike',
+      brand: 'Corsair',
       rating: 4.5,
       numReviews: 10,
       description: 'high quality product',
