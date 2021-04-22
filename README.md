@@ -7,25 +7,14 @@ $ git clone https://github.com/tenzin1308/CSc-322-Project.git
 $ cd
 ```
 
-### 2. Setup MongoDB
-
-- Local MongoDB
-  - Install it from [here](https://www.mongodb.com/try/download/community)
-  - Create .env file in root folder
-  - Set MONGODB_URL=mongodb://localhost/amazona
-- Atlas Cloud MongoDB
-  - Create database at [https://cloud.mongodb.com](https://cloud.mongodb.com)
-  - Create .env file in root folder
-  - Set MONGODB_URL=mongodb+srv://your-db-connection
-
-### 3. Run Backend
+### 2. Run Backend
 
 ```
 $ npm install
 $ npm start
 ```
 
-### 4. Run Frontend
+### 3. Run Frontend
 
 ```
 # open new terminal
@@ -34,14 +23,20 @@ $ npm install
 $ npm start
 ```
 
-### 5. Seed Users and Products
+### 4. Admin Login
 
-- Run this on chrome: http://localhost:5000/api/users/seed
-- It returns admin email and password
-- Run this on chrome: http://localhost:5000/api/products/seed
-- It creates 6 sample products
+- email: admin@futuretech.com
+- password: 0
 
-### 6. Admin Login
+### 4. Seller Login
 
-- Run http://localhost:3000/signin
-- Enter admin email and password and click signin
+- email: seller1@futuretech.com
+- password: 1
+
+### 4. User Login
+
+- email: user1@futuretech.com
+- password: 1
+
+- email: user2@futuretech.com [BLOCKED]
+- password: 2
