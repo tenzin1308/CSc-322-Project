@@ -27,7 +27,7 @@ export default function HomeScreen() {
   }, [dispatch]);
   return (
     <div>
-      <h2>Management Top Choice</h2>
+      {/* <h2>Management Top Choice</h2>
       {loadingSellers ? (
         <LoadingBox></LoadingBox>
       ) : errorSellers ? (
@@ -45,6 +45,21 @@ export default function HomeScreen() {
               </div>
             ))}
           </Carousel>
+        </>
+      )} */}
+      <h2>Management Top Choice</h2>
+      {loading ? (
+        <LoadingBox></LoadingBox>
+      ) : error ? (
+        <MessageBox variant="danger">{error}</MessageBox>
+      ) : (
+        <>
+          {products.length === 0 && <MessageBox>No Product Found</MessageBox>}
+          <div className="row center">
+            {products.map((product) => (
+              <Product key={product._id} product={product}></Product>
+            ))}
+          </div>
         </>
       )}
       <h2>Featured Products</h2>
