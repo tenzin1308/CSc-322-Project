@@ -28,12 +28,12 @@ $ npm start
 - email: admin@futuretech.com
 - password: 0
 
-### 4. Seller Login
+### 5. Seller Login
 
 - email: seller1@futuretech.com
 - password: 1
 
-### 4. User Login
+### 6. User Login
 
 - email: user1@futuretech.com
 - password: 1
