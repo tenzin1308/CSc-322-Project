@@ -29,6 +29,7 @@ import LoadingBox from './components/LoadingBox';
 import MessageBox from './components/MessageBox';
 import MapScreen from './screens/MapScreen';
 import DashboardScreen from './screens/DashboardScreen';
+import TabooListScreen from './screens/TabooListScreen';
 
 function App() {
   const cart = useSelector((state) => state.cart);
@@ -135,6 +136,9 @@ function App() {
                   <li>
                     <Link to="/userlist">Users</Link>
                   </li>
+                  <li>
+                    <Link to="/taboolist">Toboo List</Link>
+                  </li>
                 </ul>
               </div>
             )}
@@ -231,7 +235,11 @@ function App() {
             path="/user/:id/edit"
             component={UserEditScreen}
           ></AdminRoute>
-
+          <AdminRoute
+            path="/taboolist"
+            component={TabooListScreen}
+          ></AdminRoute>
+          
           <AdminRoute
             path="/dashboard"
             component={DashboardScreen}

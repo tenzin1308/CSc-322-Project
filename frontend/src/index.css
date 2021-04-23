@@ -18,9 +18,9 @@ body {
 .grid-container {
   display: grid;
   grid-template-areas:
-    'header'
-    'main'
-    'footer';
+    "header"
+    "main"
+    "footer";
   grid-template-columns: 1fr;
   grid-template-rows: 5rem 1fr 5rem;
   height: 100%;
@@ -93,6 +93,17 @@ button.block {
 button.small {
   font-size: 1.2rem;
 }
+button.add {
+  background-color: #32cd32;
+  width: 10rem;
+  margin: 2rem;
+}
+button.remove {
+  background-color: #eb3734;
+  width: 10rem;
+  margin: 2rem;
+}
+
 /* Header */
 header a {
   color: #ffffff;
@@ -391,4 +402,12 @@ img.large {
 }
 .summary-title.color3 {
   background-color: #e0e0f0;
+}
+
+/* Taboo */
+.taboo-button {
+  display: flex;
+  padding-left: 40%;
+  flex: wrap;
+  align-items: center;
 }
