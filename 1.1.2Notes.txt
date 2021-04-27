@@ -1,0 +1,14 @@
+What is this project supposed to do?
+- Develop online computer estore with features that have an
+emphasis on conveicne that other competetors do not have.
+-
+
+SCOPE
+The purpose of the online web store is to ease computer buying
+and to create a convenient and easy-to-use site for the consumer.
+There will be an easy to use disscussion forum that the customers 
+can use to exchange information about products to make a more
+informed decision.
+products and 
+To do this we have these features:
+-There will be a discussion forum 
