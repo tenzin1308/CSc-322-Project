@@ -237,6 +237,37 @@ export default function OrderScreen(props) {
                 </ul>
               </div>
             </li>
+            {order.isDelivered && (
+              <li>
+                <div className="card card-body">
+                  <h2>Complain To</h2>
+                  <ul>
+                    <textarea
+                      placeholder="Clerk"
+                      style={{ width: "97%" }}
+                      // value={justification}
+                      // onChange={(e) => setJustification(e.target.value)}
+                    ></textarea>
+                    <textarea
+                      placeholder="Shipper"
+                      style={{ width: "97%" }}
+                      // value={justification}
+                      // onChange={(e) => setJustification(e.target.value)}
+                    ></textarea>
+                    <textarea
+                      placeholder="Product"
+                      style={{ width: "97%" }}
+                      // value={justification}
+                      // onChange={(e) => setJustification(e.target.value)}
+                    ></textarea>
+                    <label>Is Warning?</label>
+                    <input type={"radio"} />
+                    <br />
+                    <button>Save</button>
+                  </ul>
+                </div>
+              </li>
+            )}
           </ul>
         </div>
         <div className="col-1">
