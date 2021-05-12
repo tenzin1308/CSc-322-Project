@@ -176,6 +176,22 @@ orderRouter.put(
       order.shippingStatus = "Shipping";
 
       const updatedOrder = await order.save();
+
+      // warning handling
+      for (let bid of order.shipperBids) {
+        if (bid.price < price && !justification) {
+          const seller = await User.findById(req.user._id);
+          seller.warnings = [
+            ...seller.warnings,
+            {
+              reason: "Bid Selection",
+              description: "This clerk select high price bid",
+              warnBy: { type: String },
+            },
+          ];
+        }
+      }
+
       res.send({ message: "Select Shipper Success", order: updatedOrder });
     } else {
       res.status(404).send({ message: "Order Not Found" });
@@ -269,6 +285,63 @@ orderRouter.put(
 
       const updatedOrder = await order.save();
       res.send({ message: "Order Delivered", order: updatedOrder });
+    } else {
+      res.status(404).send({ message: "Order Not Found" });
+    }
+  })
+);
+
+orderRouter.post(
+  "/:id/warning",
+  isAuth,
+  expressAsyncHandler(async (req, res) => {
+    const order = await Order.findById(req.params.id);
+    if (order) {
+      if (order.complain) {
+        res.status(500).send({ message: "You already complain this order" });
+      }
+      const { clerkWarning, shipperWarning } = req.body;
+      if (clerkWarning) {
+        const seller = await User.findById(order.user);
+
+        seller.warnings = [
+          ...seller.warnings,
+          {
+            reason: "Order",
+            description: clerkWarning,
+            warnBy: req.user._id,
+          },
+        ];
+
+        order.complain = {
+          ...order.complain,
+          clerkWarning,
+          warnBy: req.user._id,
+        };
+
+        const updatedSeller = await seller.save();
+      }
+      if (shipperWarning) {
+        const shipper = await User.findById(order.shipper);
+        shipper.warnings = [
+          ...shipper.warnings,
+          {
+            reason: "Order",
+            description: shipperWarning,
+            warnBy: req.user._id,
+          },
+        ];
+
+        order.complain = {
+          ...order.complain,
+          shipperWarning,
+          warnBy: req.user._id,
+        };
+
+        const updatedShipper = await shipper.save();
+      }
+      const updatedOrder = await order.save();
+      res.send({ message: "Success", order: updatedOrder });
     } else {
       res.status(404).send({ message: "Order Not Found" });
     }
