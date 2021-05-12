@@ -185,7 +185,7 @@ orderRouter.put(
             ...seller.warnings,
             {
               reason: "Bid Selection",
-              description: "This clerk select high price bid",
+              description: "select high price bid",
               warnBy: { type: String },
             },
           ];
