@@ -6,9 +6,6 @@ import MessageBox from "../components/MessageBox";
 
 export default function OrderHistoryScreen(props) {
   const orderMineList = useSelector((state) => state.orderMineList);
-  const { loading: bidOnOrderLoading } = useSelector(
-    (state) => state.bidOnOrder
-  );
   const userSignin = useSelector((state) => state.userSignin);
   const { userInfo } = userSignin;
   const { loading, error, orders } = orderMineList;
@@ -21,6 +18,10 @@ export default function OrderHistoryScreen(props) {
   const isShipperBidAlready = (bids) => {
     const shipperBid = bids.filter((bid) => bid.shipperId === userInfo._id)[0];
     return shipperBid ?? false;
+  };
+
+  const isMyShipping = (shipper) => {
+    return userInfo.isShipper && userInfo._id === shipper;
   };
 
   return (
@@ -41,6 +42,7 @@ export default function OrderHistoryScreen(props) {
               <th>TOTAL</th>
               <th>PAID</th>
               <th>DELIVERED</th>
+              <th>STATUS</th>
               <th>ACTIONS</th>
             </tr>
           </thead>
@@ -55,6 +57,34 @@ export default function OrderHistoryScreen(props) {
                   {order.isDelivered
                     ? order.deliveredAt?.substring(0, 10)
                     : "No"}
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    value={bids[i]?.status ?? ""}
+                    style={{ width: 75, marginRight: 10 }}
+                    onChange={(e) => {
+                      const newBids = { ...bids };
+                      if (!newBids[i]?.status) {
+                        newBids[i] = { status: "" };
+                      }
+                      newBids[i]["status"] = e.target.value;
+
+                      setBid(newBids);
+                    }}
+                    disabled={!isMyShipping(order.shipper)}
+                  />
+                  {isMyShipping(order.shipper) && (
+                    <button
+                      type="button"
+                      className="small"
+                      onClick={() =>
+                        dispatch(bidOnOrder(order._id, bids[i]["price"]))
+                      }
+                    >
+                      Change
+                    </button>
+                  )}
                 </td>
                 <td>
                   {userInfo.isShipper ? (
