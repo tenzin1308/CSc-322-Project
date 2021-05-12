@@ -1,15 +1,20 @@
-import Axios from 'axios';
-import { PayPalButton } from 'react-paypal-button-v2';
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { deliverOrder, detailsOrder, payOrder } from '../actions/orderActions';
-import LoadingBox from '../components/LoadingBox';
-import MessageBox from '../components/MessageBox';
+import Axios from "axios";
+import { PayPalButton } from "react-paypal-button-v2";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import {
+  deliverOrder,
+  detailsOrder,
+  payOrder,
+  selectBid,
+} from "../actions/orderActions";
+import LoadingBox from "../components/LoadingBox";
+import MessageBox from "../components/MessageBox";
 import {
   ORDER_DELIVER_RESET,
   ORDER_PAY_RESET,
-} from '../constants/orderConstants';
+} from "../constants/orderConstants";
 
 export default function OrderScreen(props) {
   const orderId = props.match.params.id;
@@ -18,7 +23,9 @@ export default function OrderScreen(props) {
   const { order, loading, error } = orderDetails;
   const userSignin = useSelector((state) => state.userSignin);
   const { userInfo } = userSignin;
-
+  const [selectedBid, setSelectedBid] = useState(null);
+  const [justificationNeeded, setJustificationNeeded] = useState(false);
+  const [justification, setJustification] = useState("");
   const orderPay = useSelector((state) => state.orderPay);
   const {
     loading: loadingPay,
@@ -34,9 +41,9 @@ export default function OrderScreen(props) {
   const dispatch = useDispatch();
   useEffect(() => {
     const addPayPalScript = async () => {
-      const { data } = await Axios.get('/api/config/paypal');
-      const script = document.createElement('script');
-      script.type = 'text/javascript';
+      const { data } = await Axios.get("/api/config/paypal");
+      const script = document.createElement("script");
+      script.type = "text/javascript";
       script.src = `https://www.paypal.com/sdk/js?client-id=${data}`;
       script.async = true;
       script.onload = () => {
@@ -71,6 +78,23 @@ export default function OrderScreen(props) {
     dispatch(deliverOrder(order._id));
   };
 
+  const isSelectedBidAcceptable = () => {
+    const bids = order.shipperBids.filter(
+      (bid) => bid.shipperId !== selectedBid.shipperId
+    );
+    for (let bid of bids) {
+      if (bid.price < selectedBid.price) {
+        setJustificationNeeded(true);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (selectedBid) {
+      isSelectedBidAcceptable();
+    }
+  }, [selectedBid]);
+
   return loading ? (
     <LoadingBox></LoadingBox>
   ) : error ? (
@@ -87,9 +111,11 @@ export default function OrderScreen(props) {
                 <p>
                   <strong>Name:</strong> {order.shippingAddress.fullName} <br />
                   <strong>Address: </strong> {order.shippingAddress.address},
-                  {order.shippingAddress.city},{' '}
+                  {order.shippingAddress.city},{" "}
                   {order.shippingAddress.postalCode},
                   {order.shippingAddress.country}
+                  <br />
+                  <strong>Shipping Status: </strong> {order.shippingStatus}
                 </p>
                 {order.isDelivered ? (
                   <MessageBox variant="success">
@@ -141,6 +167,73 @@ export default function OrderScreen(props) {
                       </div>
                     </li>
                   ))}
+                </ul>
+              </div>
+            </li>
+            <li>
+              <div className="card card-body">
+                <h2>Shipper Bids</h2>
+                <ul>
+                  {order.shipperBids.map((item) => (
+                    <li key={item._id}>
+                      <div
+                        className={`row ${
+                          order.shipper === item.shipperId ||
+                          order.shipper?._id === item.shipperId ||
+                          selectedBid?.shipperId === item.shipperId
+                            ? "highlight-row"
+                            : ""
+                        }`}
+                      >
+                        <div className="min-30">{item.shipperName}</div>
+
+                        <div>${item.price}</div>
+
+                        <div>
+                          <button
+                            onClick={() => {
+                              setSelectedBid(item);
+                              setJustificationNeeded(false);
+                            }}
+                            disabled={order.shipper}
+                          >
+                            {order.shipper === item.shipperId ||
+                            order.shipper?._id === item.shipperId
+                              ? "Selected"
+                              : "Select"}
+                          </button>
+                        </div>
+                      </div>
+                    </li>
+                  ))}
+                  {justificationNeeded && (
+                    <li>
+                      <div>
+                        <textarea
+                          placeholder="Please provide justification"
+                          style={{ width: "97%" }}
+                          value={justification}
+                          onChange={(e) => setJustification(e.target.value)}
+                        ></textarea>
+                      </div>
+                    </li>
+                  )}
+                  {selectedBid && (
+                    <button
+                      onClick={() =>
+                        dispatch(
+                          selectBid(
+                            orderId,
+                            selectedBid.price,
+                            selectedBid.shipperId,
+                            justification
+                          )
+                        )
+                      }
+                    >
+                      Save
+                    </button>
+                  )}
                 </ul>
               </div>
             </li>

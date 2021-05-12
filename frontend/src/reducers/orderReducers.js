@@ -27,6 +27,9 @@ import {
   ORDER_SUMMARY_REQUEST,
   ORDER_SUMMARY_SUCCESS,
   ORDER_SUMMARY_FAIL,
+  BID_ON_ORDER_REQUEST,
+  BID_ON_ORDER_SUCCESS,
+  BID_ON_ORDER_FAIL
 } from '../constants/orderConstants';
 
 export const orderCreateReducer = (state = {}, action) => {
@@ -135,6 +138,22 @@ export const orderSummaryReducer = (
     case ORDER_SUMMARY_SUCCESS:
       return { loading: false, summary: action.payload };
     case ORDER_SUMMARY_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const bidOnOrderReducer = (
+  state = { loading: true, order: {} },
+  action
+) => {
+  switch (action.type) {
+    case BID_ON_ORDER_REQUEST:
+      return { loading: true };
+    case BID_ON_ORDER_SUCCESS:
+      return { loading: false, order: action.payload };
+    case BID_ON_ORDER_FAIL:
       return { loading: false, error: action.payload };
     default:
       return state;

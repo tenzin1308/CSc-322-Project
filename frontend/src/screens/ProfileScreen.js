@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { detailsUser, updateUserProfile } from '../actions/userActions';
-import LoadingBox from '../components/LoadingBox';
-import MessageBox from '../components/MessageBox';
-import { USER_UPDATE_PROFILE_RESET } from '../constants/userConstants';
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { detailsUser, updateUserProfile } from "../actions/userActions";
+import LoadingBox from "../components/LoadingBox";
+import MessageBox from "../components/MessageBox";
+import { USER_UPDATE_PROFILE_RESET } from "../constants/userConstants";
 
 export default function ProfileScreen() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [sellerName, setSellerName] = useState('');
-  const [sellerLogo, setSellerLogo] = useState('');
-  const [sellerDescription, setSellerDescription] = useState('');
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [sellerName, setSellerName] = useState("");
+  const [sellerLogo, setSellerLogo] = useState("");
+  const [sellerDescription, setSellerDescription] = useState("");
 
   const userSignin = useSelector((state) => state.userSignin);
   const { userInfo } = userSignin;
@@ -25,6 +25,12 @@ export default function ProfileScreen() {
     loading: loadingUpdate,
   } = userUpdateProfile;
   const dispatch = useDispatch();
+
+  const [address, setAddress] = useState("");
+  const [city, setCity] = useState("");
+  const [postalCode, setPostalCode] = useState("");
+  const [country, setCountry] = useState("");
+
   useEffect(() => {
     if (!user) {
       dispatch({ type: USER_UPDATE_PROFILE_RESET });
@@ -37,13 +43,19 @@ export default function ProfileScreen() {
         setSellerLogo(user.seller.logo);
         setSellerDescription(user.seller.description);
       }
+
+      setAddress(user.homeAddress?.address)
+      setCity(user.homeAddress?.city)
+      setPostalCode(user.homeAddress?.postalCode)
+      setCountry(user.homeAddress?.country)
     }
   }, [dispatch, userInfo._id, user]);
+
   const submitHandler = (e) => {
     e.preventDefault();
     // dispatch update profile
     if (password !== confirmPassword) {
-      alert('Password and Confirm Password Are Not Matched');
+      alert("Password and Confirm Password Are Not Matched");
     } else {
       dispatch(
         updateUserProfile({
@@ -57,6 +69,19 @@ export default function ProfileScreen() {
         })
       );
     }
+  };
+
+  const submitHomeAddressHandler = (e) => {
+    e.preventDefault()
+    dispatch(
+      updateUserProfile({
+        userId: user._id,
+        address,
+        city,
+        postalCode,
+        country,
+      })
+    );
   };
   return (
     <div>
@@ -161,6 +186,63 @@ export default function ProfileScreen() {
           </>
         )}
       </form>
+
+      <div>
+        <form className="form" onSubmit={submitHomeAddressHandler}>
+          <h1>Home Address</h1>
+          <div>
+            <label htmlFor="address">Address</label>
+            <input
+              type="text"
+              id="address"
+              placeholder="Enter address"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              required
+            ></input>
+          </div>
+          <div>
+            <label htmlFor="city">City</label>
+            <input
+              type="text"
+              id="city"
+              placeholder="Enter city"
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              required
+            ></input>
+          </div>
+          <div>
+            <label htmlFor="postalCode">Postal Code</label>
+            <input
+              type="text"
+              id="postalCode"
+              placeholder="Enter postal code"
+              value={postalCode}
+              onChange={(e) => setPostalCode(e.target.value)}
+              required
+            ></input>
+          </div>
+          <div>
+            <label htmlFor="country">Country</label>
+            <input
+              type="text"
+              id="country"
+              placeholder="Enter country"
+              value={country}
+              onChange={(e) => setCountry(e.target.value)}
+              required
+            ></input>
+          </div>
+
+          <div>
+            <label />
+            <button className="primary" type="submit">
+              Update
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

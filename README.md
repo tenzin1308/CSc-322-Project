@@ -40,3 +40,11 @@ $ npm start
 
 - email: user2@futuretech.com [BLOCKED]
 - password: 2
+
+### 7. Delivery/Shipping Companies
+
+- email: fedex@gmail.com
+- password: 1
+
+- email: dhl@gmail.com
+- password: 1
