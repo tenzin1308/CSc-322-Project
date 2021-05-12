@@ -176,7 +176,24 @@ orderRouter.put(
       order.shippingStatus = "Shipping";
 
       const updatedOrder = await order.save();
-      res.send({ message: "Select ShipperS Success", order: updatedOrder });
+      res.send({ message: "Select Shipper Success", order: updatedOrder });
+    } else {
+      res.status(404).send({ message: "Order Not Found" });
+    }
+  })
+);
+
+orderRouter.put(
+  "/:id/change-status",
+  isAuth,
+  expressAsyncHandler(async (req, res) => {
+    const { status } = req.body;
+    const order = await Order.findById(req.params.id);
+    if (order) {
+      order.shippingStatus = status ? status : "Shipping";
+
+      const updatedOrder = await order.save();
+      res.send({ message: "Change Status Success", order: updatedOrder });
     } else {
       res.status(404).send({ message: "Order Not Found" });
     }

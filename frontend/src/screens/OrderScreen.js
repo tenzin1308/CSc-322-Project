@@ -3,7 +3,12 @@ import { PayPalButton } from "react-paypal-button-v2";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { deliverOrder, detailsOrder, payOrder, selectBid } from "../actions/orderActions";
+import {
+  deliverOrder,
+  detailsOrder,
+  payOrder,
+  selectBid,
+} from "../actions/orderActions";
 import LoadingBox from "../components/LoadingBox";
 import MessageBox from "../components/MessageBox";
 import {
@@ -109,6 +114,8 @@ export default function OrderScreen(props) {
                   {order.shippingAddress.city},{" "}
                   {order.shippingAddress.postalCode},
                   {order.shippingAddress.country}
+                  <br />
+                  <strong>Shipping Status: </strong> {order.shippingStatus}
                 </p>
                 {order.isDelivered ? (
                   <MessageBox variant="success">
@@ -206,13 +213,24 @@ export default function OrderScreen(props) {
                           placeholder="Please provide justification"
                           style={{ width: "97%" }}
                           value={justification}
-                          onChange={(e)=>setJustification(e.target.value)}
+                          onChange={(e) => setJustification(e.target.value)}
                         ></textarea>
                       </div>
                     </li>
                   )}
                   {selectedBid && (
-                    <button onClick={() => dispatch(selectBid(orderId, selectedBid.price, selectedBid.shipperId, justification))}>
+                    <button
+                      onClick={() =>
+                        dispatch(
+                          selectBid(
+                            orderId,
+                            selectedBid.price,
+                            selectedBid.shipperId,
+                            justification
+                          )
+                        )
+                      }
+                    >
                       Save
                     </button>
                   )}

@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { listOrderMine, bidOnOrder } from "../actions/orderActions";
+import {
+  listOrderMine,
+  bidOnOrder,
+  changeOrderStatus,
+} from "../actions/orderActions";
 import LoadingBox from "../components/LoadingBox";
 import MessageBox from "../components/MessageBox";
 
@@ -61,7 +65,7 @@ export default function OrderHistoryScreen(props) {
                 <td>
                   <input
                     type="text"
-                    value={bids[i]?.status ?? ""}
+                    value={bids[i]?.status || order.shippingStatus || ""}
                     style={{ width: 75, marginRight: 10 }}
                     onChange={(e) => {
                       const newBids = { ...bids };
@@ -78,9 +82,13 @@ export default function OrderHistoryScreen(props) {
                     <button
                       type="button"
                       className="small"
-                      onClick={() =>
-                        dispatch(bidOnOrder(order._id, bids[i]["price"]))
-                      }
+                      onClick={() => {
+                        if (bids[i]["status"]) {
+                          dispatch(
+                            changeOrderStatus(order._id, bids[i]["status"])
+                          );
+                        }
+                      }}
                     >
                       Change
                     </button>

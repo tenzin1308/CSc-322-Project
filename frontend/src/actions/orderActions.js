@@ -29,7 +29,10 @@ import {
   BID_ON_ORDER_FAIL,
   SELECT_BID_REQUEST,
   SELECT_BID_SUCCESS,
-  SELECT_BID_FAIL
+  SELECT_BID_FAIL,
+  CHANGE_STATUS_REQUEST,
+  CHANGE_STATUS_SUCCESS,
+  CHANGE_STATUS_FAIL,
 } from "../constants/orderConstants";
 
 export const createOrder = (order) => async (dispatch, getState) => {
@@ -233,7 +236,10 @@ export const bidOnOrder = (orderId, price) => async (dispatch, getState) => {
   }
 };
 
-export const selectBid = (orderId, price,shipperId, justification) => async (dispatch, getState) => {
+export const selectBid = (orderId, price, shipperId, justification) => async (
+  dispatch,
+  getState
+) => {
   dispatch({ type: SELECT_BID_REQUEST });
   const {
     userSignin: { userInfo },
@@ -244,7 +250,7 @@ export const selectBid = (orderId, price,shipperId, justification) => async (dis
       {
         shipperId,
         price,
-        justification
+        justification,
       },
       {
         headers: {
@@ -260,5 +266,33 @@ export const selectBid = (orderId, price,shipperId, justification) => async (dis
         ? error.response.data.message
         : error.message;
     dispatch({ type: SELECT_BID_FAIL, payload: message });
+  }
+};
+
+export const changeOrderStatus = (orderId, status) => async (dispatch, getState) => {
+  dispatch({ type: CHANGE_STATUS_REQUEST });
+  const {
+    userSignin: { userInfo },
+  } = getState();
+  try {
+    const { data } = await Axios.put(
+      `/api/orders/${orderId}/change-status`,
+      {
+        status,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      }
+    );
+    dispatch({ type: CHANGE_STATUS_SUCCESS, payload: data });
+    dispatch(listOrderMine());
+  } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+    dispatch({ type: CHANGE_STATUS_FAIL, payload: message });
   }
 };
