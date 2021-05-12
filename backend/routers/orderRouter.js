@@ -164,6 +164,25 @@ orderRouter.put(
 );
 
 orderRouter.put(
+  "/:id/select-shipper",
+  // isAuth,
+  expressAsyncHandler(async (req, res) => {
+    const { shipperId, price, justification } = req.body;
+    const order = await Order.findById(req.params.id);
+    if (order) {
+      order.shipper = await User.findById(shipperId);
+      order.shippingPrice = price;
+      order.selectShipperJustification = justification;
+
+      const updatedOrder = await order.save();
+      res.send({ message: "Select ShipperS Success", order: updatedOrder });
+    } else {
+      res.status(404).send({ message: "Order Not Found" });
+    }
+  })
+);
+
+orderRouter.put(
   "/:id/pay",
   isAuth,
   expressAsyncHandler(async (req, res) => {
