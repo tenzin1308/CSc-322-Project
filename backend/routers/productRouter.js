@@ -86,6 +86,7 @@ productRouter.get(
         .send({ message: 'No seller found. first run /api/users/seed' });
     }
   })
+  
 );
 
 productRouter.get(

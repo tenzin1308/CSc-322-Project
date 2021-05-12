@@ -18,13 +18,13 @@ export default function ProductScreen(props) {
 
         
         if (state.button === 1) {
-            console.log("Add Button clicked!");
+            console.log("Add button clicked!");
             filter.addWords(tabooWord);
             console.log(filter.clean(tabooWord));    
                    
         }
         if (state.button === 2) {
-            console.log("Remove Button clicked!");
+            console.log("Remove button clicked!");
             filter.removeWords(tabooWord);
             console.log(filter.clean(tabooWord));   
         }  
