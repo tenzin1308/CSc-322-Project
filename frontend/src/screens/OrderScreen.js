@@ -168,7 +168,15 @@ export default function OrderScreen(props) {
                 <ul>
                   {order.shipperBids.map((item) => (
                     <li key={item._id}>
-                      <div className="row">
+                      <div
+                        className={`row ${
+                          order.shipper === item.shipperId ||
+                          order.shipper?._id === item.shipperId ||
+                          selectedBid?.shipperId === item.shipperId
+                            ? "highlight-row"
+                            : ""
+                        }`}
+                      >
                         <div className="min-30">{item.shipperName}</div>
 
                         <div>${item.price}</div>
@@ -181,7 +189,10 @@ export default function OrderScreen(props) {
                             }}
                             disabled={order.shipper}
                           >
-                            {order.shipper === item.shipperId || order.shipper?._id === item.shipperId ? "Selected" : "Select"}
+                            {order.shipper === item.shipperId ||
+                            order.shipper?._id === item.shipperId
+                              ? "Selected"
+                              : "Select"}
                           </button>
                         </div>
                       </div>
@@ -194,10 +205,10 @@ export default function OrderScreen(props) {
                           placeholder="Please provide justification"
                           style={{ width: "97%" }}
                         ></textarea>
-                        <button>Submut</button>
                       </div>
                     </li>
                   )}
+                  {selectedBid && <button>Save</button>}
                 </ul>
               </div>
             </li>
