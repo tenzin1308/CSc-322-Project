@@ -1,19 +1,28 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { listOrderMine } from "../actions/orderActions";
+import { listOrderMine, bidOnOrder } from "../actions/orderActions";
 import LoadingBox from "../components/LoadingBox";
 import MessageBox from "../components/MessageBox";
 
 export default function OrderHistoryScreen(props) {
   const orderMineList = useSelector((state) => state.orderMineList);
+  const { loading: bidOnOrderLoading } = useSelector(
+    (state) => state.bidOnOrder
+  );
   const userSignin = useSelector((state) => state.userSignin);
   const { userInfo } = userSignin;
   const { loading, error, orders } = orderMineList;
   const [bids, setBid] = useState([]);
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(listOrderMine(userInfo.isShipper));
+    dispatch(listOrderMine());
   }, [dispatch]);
+
+  const isShipperBidAlready = (bids) => {
+    const shipperBid = bids.filter((bid) => bid.shipperId === userInfo._id)[0];
+    return shipperBid ?? false;
+  };
+
   return (
     <div>
       <h1>
@@ -53,7 +62,11 @@ export default function OrderHistoryScreen(props) {
                       <input
                         type="number"
                         id="bid_price"
-                        value={bids[i]?.price ?? 0}
+                        value={
+                          isShipperBidAlready(order.shipperBids)
+                            ? isShipperBidAlready(order.shipperBids).price
+                            : bids[i]?.price ?? 0
+                        }
                         style={{ width: 50, marginRight: 10 }}
                         onChange={(e) => {
                           const newBids = { ...bids };
@@ -64,19 +77,19 @@ export default function OrderHistoryScreen(props) {
 
                           setBid(newBids);
                         }}
+                        disabled={isShipperBidAlready(order.shipperBids)}
                       />
-                      <button
-                        type="button"
-                        className="small"
-                        onClick={() => {
-                          // setBid({
-                          //   id: order._id,
-                          //   price:bids.price
-                          // })
-                        }}
-                      >
-                        Bid
-                      </button>
+                      {!isShipperBidAlready(order.shipperBids) && (
+                        <button
+                          type="button"
+                          className="small"
+                          onClick={() =>
+                            dispatch(bidOnOrder(order._id, bids[i]["price"]))
+                          }
+                        >
+                          Bid
+                        </button>
+                      )}
                     </>
                   ) : (
                     <button

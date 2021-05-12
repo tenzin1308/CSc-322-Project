@@ -1,5 +1,5 @@
-import Axios from 'axios';
-import { CART_EMPTY } from '../constants/cartConstants';
+import Axios from "axios";
+import { CART_EMPTY } from "../constants/cartConstants";
 import {
   ORDER_CREATE_FAIL,
   ORDER_CREATE_REQUEST,
@@ -24,7 +24,10 @@ import {
   ORDER_DELIVER_FAIL,
   ORDER_SUMMARY_REQUEST,
   ORDER_SUMMARY_SUCCESS,
-} from '../constants/orderConstants';
+  BID_ON_ORDER_REQUEST,
+  BID_ON_ORDER_SUCCESS,
+  BID_ON_ORDER_FAIL,
+} from "../constants/orderConstants";
 
 export const createOrder = (order) => async (dispatch, getState) => {
   dispatch({ type: ORDER_CREATE_REQUEST, payload: order });
@@ -32,14 +35,14 @@ export const createOrder = (order) => async (dispatch, getState) => {
     const {
       userSignin: { userInfo },
     } = getState();
-    const { data } = await Axios.post('/api/orders', order, {
+    const { data } = await Axios.post("/api/orders", order, {
       headers: {
         Authorization: `Bearer ${userInfo.token}`,
       },
     });
     dispatch({ type: ORDER_CREATE_SUCCESS, payload: data.order });
     dispatch({ type: CART_EMPTY });
-    localStorage.removeItem('cartItems');
+    localStorage.removeItem("cartItems");
   } catch (error) {
     dispatch({
       type: ORDER_CREATE_FAIL,
@@ -91,17 +94,22 @@ export const payOrder = (order, paymentResult) => async (
     dispatch({ type: ORDER_PAY_FAIL, payload: message });
   }
 };
-export const listOrderMine = (isShipper) => async (dispatch, getState) => {
+export const listOrderMine = () => async (dispatch, getState) => {
   dispatch({ type: ORDER_MINE_LIST_REQUEST });
   const {
     userSignin: { userInfo },
   } = getState();
   try {
-    const { data } = await Axios.get(isShipper ? '/api/orders/not-delivered-orders' : '/api/orders/mine', {
-      headers: {
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    });
+    const { data } = await Axios.get(
+      userInfo.isShipper
+        ? "/api/orders/not-delivered-orders"
+        : "/api/orders/mine",
+      {
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      }
+    );
     dispatch({ type: ORDER_MINE_LIST_SUCCESS, payload: data });
   } catch (error) {
     const message =
@@ -111,7 +119,7 @@ export const listOrderMine = (isShipper) => async (dispatch, getState) => {
     dispatch({ type: ORDER_MINE_LIST_FAIL, payload: message });
   }
 };
-export const listOrders = ({ seller = '' }) => async (dispatch, getState) => {
+export const listOrders = ({ seller = "" }) => async (dispatch, getState) => {
   dispatch({ type: ORDER_LIST_REQUEST });
   const {
     userSignin: { userInfo },
@@ -120,7 +128,6 @@ export const listOrders = ({ seller = '' }) => async (dispatch, getState) => {
     const { data } = await Axios.get(`/api/orders?seller=${seller}`, {
       headers: { Authorization: `Bearer ${userInfo.token}` },
     });
-    console.log(data);
     dispatch({ type: ORDER_LIST_SUCCESS, payload: data });
   } catch (error) {
     const message =
@@ -178,7 +185,7 @@ export const summaryOrder = () => async (dispatch, getState) => {
     userSignin: { userInfo },
   } = getState();
   try {
-    const { data } = await Axios.get('/api/orders/summary', {
+    const { data } = await Axios.get("/api/orders/summary", {
       headers: { Authorization: `Bearer ${userInfo.token}` },
     });
     dispatch({ type: ORDER_SUMMARY_SUCCESS, payload: data });
@@ -190,5 +197,35 @@ export const summaryOrder = () => async (dispatch, getState) => {
           ? error.response.data.message
           : error.message,
     });
+  }
+};
+
+export const bidOnOrder = (orderId, price) => async (dispatch, getState) => {
+  dispatch({ type: BID_ON_ORDER_REQUEST });
+  const {
+    userSignin: { userInfo },
+  } = getState();
+  try {
+    const { data } = await Axios.put(
+      `/api/orders/${orderId}/bid`,
+      {
+        shipperId: userInfo._id,
+        name: userInfo.name,
+        price: price,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      }
+    );
+    dispatch({ type: BID_ON_ORDER_SUCCESS, payload: data });
+    dispatch(listOrderMine());
+  } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+    dispatch({ type: BID_ON_ORDER_FAIL, payload: message });
   }
 };
