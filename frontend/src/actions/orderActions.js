@@ -91,13 +91,13 @@ export const payOrder = (order, paymentResult) => async (
     dispatch({ type: ORDER_PAY_FAIL, payload: message });
   }
 };
-export const listOrderMine = () => async (dispatch, getState) => {
+export const listOrderMine = (isShipper) => async (dispatch, getState) => {
   dispatch({ type: ORDER_MINE_LIST_REQUEST });
   const {
     userSignin: { userInfo },
   } = getState();
   try {
-    const { data } = await Axios.get('/api/orders/mine', {
+    const { data } = await Axios.get(isShipper ? '/api/orders/not-delivered-orders' : '/api/orders/mine', {
       headers: {
         Authorization: `Bearer ${userInfo.token}`,
       },

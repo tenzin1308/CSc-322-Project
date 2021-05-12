@@ -8,6 +8,10 @@ const userSchema = new mongoose.Schema(
     isAdmin: { type: Boolean, default: false, required: true },
     isBlocked: { type: Boolean, default: false, required: true },
     isSeller: { type: Boolean, default: false, required: true },
+    isShipper: { type: Boolean, default: false, required: true },
+    shipper :{
+      logo: String,
+    },
     seller: {
       name: String,
       logo: String,

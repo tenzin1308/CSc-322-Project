@@ -7,6 +7,7 @@ import {
   isAdmin,
   isAuth,
   isSellerOrAdmin,
+  isShipperOrAdmin,
   mailgun,
   payOrderEmailTemplate,
 } from '../utils.js';
@@ -21,6 +22,20 @@ orderRouter.get(
     const sellerFilter = seller ? { seller } : {};
 
     const orders = await Order.find({ ...sellerFilter }).populate(
+      'user',
+      'name'
+    );
+    res.send(orders);
+  })
+);
+
+orderRouter.get(
+  '/not-delivered-orders',
+  isAuth,
+  isShipperOrAdmin,
+  expressAsyncHandler(async (req, res) => {
+
+    const orders = await Order.find({ isDelivered: false }).populate(
       'user',
       'name'
     );
