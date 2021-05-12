@@ -237,7 +237,8 @@ export default function OrderScreen(props) {
                 </ul>
               </div>
             </li>
-            {order.isDelivered && (
+
+            {order.isDelivered && order.user === userInfo._id && (
               <li>
                 <div className="card card-body">
                   <h2>Complain To</h2>
@@ -260,9 +261,15 @@ export default function OrderScreen(props) {
                       // value={justification}
                       // onChange={(e) => setJustification(e.target.value)}
                     ></textarea>
-                    <label>Is Warning?</label>
-                    <input type={"radio"} />
+
                     <br />
+                    <br />
+                    <strong>Is Warning For:</strong>
+                    <input type="checkbox" name="vehicle1" value="Bike" />Seller 
+                    <input type="checkbox" name="vehicle2" value="Car" />Shipper
+                    <br />
+                    <br />
+
                     <button>Save</button>
                   </ul>
                 </div>
