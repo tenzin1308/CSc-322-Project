@@ -27,6 +27,9 @@ import {
   BID_ON_ORDER_REQUEST,
   BID_ON_ORDER_SUCCESS,
   BID_ON_ORDER_FAIL,
+  SELECT_BID_REQUEST,
+  SELECT_BID_SUCCESS,
+  SELECT_BID_FAIL
 } from "../constants/orderConstants";
 
 export const createOrder = (order) => async (dispatch, getState) => {
@@ -227,5 +230,35 @@ export const bidOnOrder = (orderId, price) => async (dispatch, getState) => {
         ? error.response.data.message
         : error.message;
     dispatch({ type: BID_ON_ORDER_FAIL, payload: message });
+  }
+};
+
+export const selectBid = (orderId, price,shipperId, justification) => async (dispatch, getState) => {
+  dispatch({ type: SELECT_BID_REQUEST });
+  const {
+    userSignin: { userInfo },
+  } = getState();
+  try {
+    const { data } = await Axios.put(
+      `/api/orders/${orderId}/select-shipper`,
+      {
+        shipperId,
+        price,
+        justification
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      }
+    );
+    dispatch({ type: SELECT_BID_SUCCESS, payload: data });
+    dispatch(detailsOrder(orderId));
+  } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+    dispatch({ type: SELECT_BID_FAIL, payload: message });
   }
 };

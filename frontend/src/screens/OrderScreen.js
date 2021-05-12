@@ -3,7 +3,7 @@ import { PayPalButton } from "react-paypal-button-v2";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { deliverOrder, detailsOrder, payOrder } from "../actions/orderActions";
+import { deliverOrder, detailsOrder, payOrder, selectBid } from "../actions/orderActions";
 import LoadingBox from "../components/LoadingBox";
 import MessageBox from "../components/MessageBox";
 import {
@@ -20,6 +20,7 @@ export default function OrderScreen(props) {
   const { userInfo } = userSignin;
   const [selectedBid, setSelectedBid] = useState(null);
   const [justificationNeeded, setJustificationNeeded] = useState(false);
+  const [justification, setJustification] = useState("");
   const orderPay = useSelector((state) => state.orderPay);
   const {
     loading: loadingPay,
@@ -204,11 +205,17 @@ export default function OrderScreen(props) {
                         <textarea
                           placeholder="Please provide justification"
                           style={{ width: "97%" }}
+                          value={justification}
+                          onChange={(e)=>setJustification(e.target.value)}
                         ></textarea>
                       </div>
                     </li>
                   )}
-                  {selectedBid && <button>Save</button>}
+                  {selectedBid && (
+                    <button onClick={() => dispatch(selectBid(orderId, selectedBid.price, selectedBid.shipperId, justification))}>
+                      Save
+                    </button>
+                  )}
                 </ul>
               </div>
             </li>
