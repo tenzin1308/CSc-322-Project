@@ -84,7 +84,6 @@ export default function ProfileScreen() {
     );
   };
   return (
-    console.log('user', user),
     <div>
       <form className="form" onSubmit={submitHandler}>
         <div>
