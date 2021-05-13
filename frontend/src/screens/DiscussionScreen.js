@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 const chat = [
   {
     sender: {
@@ -19,21 +19,30 @@ const chat = [
   },
 ];
 export default function DiscussionScreen(props) {
+  const userSignin = useSelector((state) => state.userSignin);
+  const { userInfo } = userSignin;
+
   return (
     <div>
       <h2>
         <center>Discussion Forum</center>
       </h2>
-      <form className="container" style={{display:"flex", justifyContent:"space-evenly"}} onSubmit={() => {}}>
-        <textarea
-          type="text"
-          // onChange={(e) => setTabooWord(e.target.value)}
-          style={{width: "85%", maxWidth: "85%"}}
-        ></textarea>
-        <button type="submit" className="add">
-          Send
-        </button>{" "}
-      </form>
+      {userInfo && (
+        <form
+          className="container"
+          style={{ display: "flex", justifyContent: "space-evenly" }}
+          onSubmit={() => {}}
+        >
+          <textarea
+            type="text"
+            // onChange={(e) => setTabooWord(e.target.value)}
+            style={{ width: "85%", maxWidth: "85%" }}
+          ></textarea>
+          <button type="submit" className="add">
+            Send
+          </button>{" "}
+        </form>
+      )}
       <hr />
       {chat.map((msg) => {
         return (
