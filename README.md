@@ -28,12 +28,18 @@ $ npm start
 - email: admin@futuretech.com
 - password: 0
 
-### 5. Seller Login
+### 5. Seller1 Login
 
 - email: seller1@futuretech.com
 - password: 1
 
-### 6. User Login
+
+### 6. Seller2 Login
+
+- email: seller2@futuretech.com
+- password: 2
+
+### 7. User Login
 
 - email: user1@futuretech.com
 - password: 1
@@ -41,7 +47,7 @@ $ npm start
 - email: user2@futuretech.com [BLOCKED]
 - password: 2
 
-### 7. Delivery/Shipping Companies
+### 8. Delivery/Shipping Companies
 
 - email: fedex@gmail.com
 - password: 1
