@@ -127,6 +127,8 @@ export default function OrderScreen(props) {
                   {order.shippingAddress.country}
                   <br />
                   <strong>Shipping Status: </strong> {order.shippingStatus}
+                  <br />
+                  <strong>Tracking No: </strong> {order.trackingNo}
                 </p>
                 {order.isDelivered ? (
                   <MessageBox variant="success">
@@ -262,6 +264,7 @@ export default function OrderScreen(props) {
                       placeholder="Clerk"
                       style={{ width: "97%" }}
                       value={clerkWarning}
+                      disabled={order.complain}
                       onChange={(e) => setClerkWarning(e.target.value)}
                     ></textarea>
                     <br />
@@ -270,6 +273,7 @@ export default function OrderScreen(props) {
                       placeholder="Shipper"
                       style={{ width: "97%" }}
                       value={shipperWarning}
+                      disabled={order.complain}
                       onChange={(e) => setShipperWarning(e.target.value)}
                     ></textarea>
                     {/* <textarea
@@ -281,9 +285,11 @@ export default function OrderScreen(props) {
                     <br />
                     <br />
 
-                    <button onClick={() => complainOnOrderHandler()}>
-                      Save
-                    </button>
+                    {!order.complain && (
+                      <button onClick={() => complainOnOrderHandler()}>
+                        Save
+                      </button>
+                    )}
                   </ul>
                 </div>
               </li>

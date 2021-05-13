@@ -279,7 +279,7 @@ orderRouter.delete(
 orderRouter.put(
   "/:id/deliver",
   isAuth,
-  isAdmin,
+  isShipperOrAdmin,
   expressAsyncHandler(async (req, res) => {
     const order = await Order.findById(req.params.id);
     if (order) {
@@ -300,12 +300,13 @@ orderRouter.post(
   expressAsyncHandler(async (req, res) => {
     const order = await Order.findById(req.params.id);
     if (order) {
-      if (order.complain) {
+      console.log('order', order)
+      if (order.complain && order.complain.warnBy) {
         res.status(500).send({ message: "You already complain this order" });
       }
       const { clerkWarning, shipperWarning } = req.body;
       if (clerkWarning) {
-        const seller = await User.findById(order.user);
+        const seller = await User.findById(order.seller);
 
         seller.warnings = [
           ...seller.warnings,
@@ -324,7 +325,7 @@ orderRouter.post(
         if (seller.warnings.length >= 3) {
           seller.isBlocked = true;
         }
-        const updatedSeller = await seller.save();
+        await seller.save();
       }
       if (shipperWarning) {
         const shipper = await User.findById(order.shipper);
@@ -345,7 +346,7 @@ orderRouter.post(
         if (shipper.warnings.length >= 3) {
           shipper.isBlocked = true;
         }
-        const updatedShipper = await shipper.save();
+        await shipper.save();
       }
       const updatedOrder = await order.save();
       res.send({ message: "Success", order: updatedOrder });
