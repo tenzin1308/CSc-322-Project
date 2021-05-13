@@ -7,6 +7,7 @@ import userRouter from './routers/userRouter.js';
 import orderRouter from './routers/orderRouter.js';
 import uploadRouter from './routers/uploadRouter.js';
 import tabooRouter from './routers/tabooRouter.js';
+import discussionRouter from './routers/discussionRouter.js';
 
 dotenv.config();
 
@@ -23,6 +24,7 @@ app.use('/api/uploads', uploadRouter);
 app.use('/api/users', userRouter);
 app.use('/api/products', productRouter);
 app.use('/api/taboo', tabooRouter);
+app.use('/api/discussion', discussionRouter);
 app.use('/api/orders', orderRouter);
 app.get('/api/config/paypal', (req, res) => {
   res.send(process.env.PAYPAL_CLIENT_ID || 'sb');
