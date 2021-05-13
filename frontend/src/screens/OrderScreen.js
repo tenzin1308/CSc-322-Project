@@ -181,73 +181,77 @@ export default function OrderScreen(props) {
                 </ul>
               </div>
             </li>
-            <li>
-              <div className="card card-body">
-                <h2>Shipper Bids</h2>
-                <ul>
-                  {order.shipperBids.map((item) => (
-                    <li key={item._id}>
-                      <div
-                        className={`row ${
-                          order.shipper === item.shipperId ||
-                          order.shipper?._id === item.shipperId ||
-                          selectedBid?.shipperId === item.shipperId
-                            ? "highlight-row"
-                            : ""
-                        }`}
-                      >
-                        <div className="min-30">{item.shipperName}</div>
+            {(userInfo.isSeller || userInfo.isAdmin) && (
+              <li>
+                <div className="card card-body">
+                  <h2>Shipper Bids</h2>
+                  <ul>
+                    {order.shipperBids.map((item) => (
+                      <li key={item._id}>
+                        <div
+                          className={`row ${
+                            order.shipper === item.shipperId ||
+                            order.shipper?._id === item.shipperId ||
+                            selectedBid?.shipperId === item.shipperId
+                              ? "highlight-row"
+                              : ""
+                          }`}
+                        >
+                          <div className="min-30">{item.shipperName}</div>
 
-                        <div>${item.price}</div>
+                          <div>${item.price}</div>
 
-                        <div>
-                          <button
-                            onClick={() => {
-                              setSelectedBid(item);
-                              setJustificationNeeded(false);
-                            }}
-                            disabled={order.shipper}
-                          >
-                            {order.shipper === item.shipperId ||
-                            order.shipper?._id === item.shipperId
-                              ? "Selected"
-                              : "Select"}
-                          </button>
+                          <div>
+                            <button
+                              onClick={() => {
+                                setSelectedBid(item);
+                                setJustificationNeeded(false);
+                              }}
+                              disabled={order.shipper}
+                            >
+                              {order.shipper === item.shipperId ||
+                              order.shipper?._id === item.shipperId
+                                ? "Selected"
+                                : "Select"}
+                            </button>
+                          </div>
                         </div>
-                      </div>
-                    </li>
-                  ))}
-                  {justificationNeeded && (
-                    <li>
-                      <div>
-                        <textarea
-                          placeholder="Please provide justification"
-                          style={{ width: "97%" }}
-                          value={justification}
-                          onChange={(e) => setJustification(e.target.value)}
-                        ></textarea>
-                      </div>
-                    </li>
-                  )}
-                  {selectedBid && (
-                    <button
-                      onClick={() =>
-                        dispatch(
-                          selectBid(
-                            orderId,
-                            selectedBid.price,
-                            selectedBid.shipperId,
-                            justification
+                      </li>
+                    ))}
+                    {justificationNeeded && (
+                      <li>
+                        <div>
+                          <textarea
+                            placeholder="Please provide justification"
+                            style={{ width: "97%" }}
+                            value={justification}
+                            onChange={(e) => setJustification(e.target.value)}
+                            disabled={order.shipper}
+                          ></textarea>
+                        </div>
+                      </li>
+                    )}
+                    {selectedBid && (
+                      <button
+                        disabled={order.shipper}
+                        onClick={() =>
+                          dispatch(
+                            selectBid(
+                              orderId,
+                              selectedBid.price,
+                              selectedBid.shipperId,
+                              justification
+                            )
                           )
-                        )
-                      }
-                    >
-                      Save
-                    </button>
-                  )}
-                </ul>
-              </div>
-            </li>
+                        }
+                      >
+                        Save
+                      </button>
+                    )}
+                  </ul>
+                </div>
+              </li>
+            )}
 
             {order.isDelivered && order.user === userInfo._id && (
               <li>

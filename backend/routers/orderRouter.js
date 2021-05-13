@@ -185,10 +185,11 @@ orderRouter.put(
             ...seller.warnings,
             {
               reason: "Bid Selection",
-              description: "select high price bid",
-              warnBy: { type: String },
+              description: `select high price bid without justification on order ${order._id}`,
             },
           ];
+
+          await seller.save();
         }
       }
 
