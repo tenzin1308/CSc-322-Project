@@ -27,6 +27,13 @@ const userSchema = new mongoose.Schema(
       lat: Number,
       lng: Number,
     },
+    warnings: [
+      {
+        reason: { type: String, required: true },
+        description: { type: String, required: true },
+        warnBy: { type: String },
+      },
+    ],
   },
   {
     timestamps: true,

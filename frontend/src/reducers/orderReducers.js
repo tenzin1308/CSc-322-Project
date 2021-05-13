@@ -29,8 +29,26 @@ import {
   ORDER_SUMMARY_FAIL,
   BID_ON_ORDER_REQUEST,
   BID_ON_ORDER_SUCCESS,
-  BID_ON_ORDER_FAIL
-} from '../constants/orderConstants';
+  BID_ON_ORDER_FAIL,
+  COMPLAIN_ON_ORDER_REQUEST,
+  COMPLAIN_ON_ORDER_SUCCESS,
+  COMPLAIN_ON_ORDER_FAIL,
+} from "../constants/orderConstants";
+
+export const complainOnOrderReducer = (state = {}, action) => {
+  switch (action.type) {
+    case COMPLAIN_ON_ORDER_REQUEST:
+      return { loading: true };
+    case COMPLAIN_ON_ORDER_SUCCESS:
+      return { loading: false, success: true, order: action.payload };
+    case ORDER_CREATE_FAIL:
+      return { loading: false, error: action.payload };
+    case COMPLAIN_ON_ORDER_FAIL:
+      return {};
+    default:
+      return state;
+  }
+};
 
 export const orderCreateReducer = (state = {}, action) => {
   switch (action.type) {

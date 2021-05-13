@@ -44,10 +44,10 @@ export default function ProfileScreen() {
         setSellerDescription(user.seller.description);
       }
 
-      setAddress(user.homeAddress?.address)
-      setCity(user.homeAddress?.city)
-      setPostalCode(user.homeAddress?.postalCode)
-      setCountry(user.homeAddress?.country)
+      setAddress(user.homeAddress?.address);
+      setCity(user.homeAddress?.city);
+      setPostalCode(user.homeAddress?.postalCode);
+      setCountry(user.homeAddress?.country);
     }
   }, [dispatch, userInfo._id, user]);
 
@@ -72,7 +72,7 @@ export default function ProfileScreen() {
   };
 
   const submitHomeAddressHandler = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     dispatch(
       updateUserProfile({
         userId: user._id,
@@ -187,60 +187,78 @@ export default function ProfileScreen() {
         )}
       </form>
 
+      {!user?.isSeller && !user?.isAdmin && !user?.isShipper && (
+        <div>
+          <form className="form" onSubmit={submitHomeAddressHandler}>
+            <h1>Home Address</h1>
+            <div>
+              <label htmlFor="address">Address</label>
+              <input
+                type="text"
+                id="address"
+                placeholder="Enter address"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                required
+              ></input>
+            </div>
+            <div>
+              <label htmlFor="city">City</label>
+              <input
+                type="text"
+                id="city"
+                placeholder="Enter city"
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+                required
+              ></input>
+            </div>
+            <div>
+              <label htmlFor="postalCode">Postal Code</label>
+              <input
+                type="text"
+                id="postalCode"
+                placeholder="Enter postal code"
+                value={postalCode}
+                onChange={(e) => setPostalCode(e.target.value)}
+                required
+              ></input>
+            </div>
+            <div>
+              <label htmlFor="country">Country</label>
+              <input
+                type="text"
+                id="country"
+                placeholder="Enter country"
+                value={country}
+                onChange={(e) => setCountry(e.target.value)}
+                required
+              ></input>
+            </div>
+
+            <div>
+              <label />
+              <button className="primary" type="submit">
+                Update
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+
       <div>
         <form className="form" onSubmit={submitHomeAddressHandler}>
-          <h1>Home Address</h1>
-          <div>
-            <label htmlFor="address">Address</label>
-            <input
-              type="text"
-              id="address"
-              placeholder="Enter address"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-              required
-            ></input>
-          </div>
-          <div>
-            <label htmlFor="city">City</label>
-            <input
-              type="text"
-              id="city"
-              placeholder="Enter city"
-              value={city}
-              onChange={(e) => setCity(e.target.value)}
-              required
-            ></input>
-          </div>
-          <div>
-            <label htmlFor="postalCode">Postal Code</label>
-            <input
-              type="text"
-              id="postalCode"
-              placeholder="Enter postal code"
-              value={postalCode}
-              onChange={(e) => setPostalCode(e.target.value)}
-              required
-            ></input>
-          </div>
-          <div>
-            <label htmlFor="country">Country</label>
-            <input
-              type="text"
-              id="country"
-              placeholder="Enter country"
-              value={country}
-              onChange={(e) => setCountry(e.target.value)}
-              required
-            ></input>
-          </div>
-
-          <div>
-            <label />
-            <button className="primary" type="submit">
-              Update
-            </button>
-          </div>
+          <h1>Warnings</h1>
+          <ol>
+            {user?.warnings?.map((warning) => {
+              return (
+                <li key={warning._id}>
+                  {" "}
+                  <strong>{warning.reason}</strong> {warning.description}
+                </li>
+              );
+            })}
+          </ol>
         </form>
       </div>
     </div>
