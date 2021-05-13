@@ -1,24 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { sendMessage, getDiscussion } from "../actions/tabooActions";
-const chat = [
-  {
-    sender: {
-      _id: 2,
-      name: "Smith Lee",
-    },
-    message: "Hey! How are you",
-    time: "11:01",
-  },
-  {
-    sender: {
-      _id: 1,
-      name: "John Doe",
-    },
-    message: "Hey! I'm fine. Thanks for asking!",
-    time: "11:01",
-  },
-];
+
 export default function DiscussionScreen(props) {
   const userSignin = useSelector((state) => state.userSignin);
   const { discussion } = useSelector((state) => state.getDiscussion);
