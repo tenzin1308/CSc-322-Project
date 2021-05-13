@@ -8,6 +8,7 @@ import {
   detailsOrder,
   payOrder,
   selectBid,
+  complainOnOrder,
 } from "../actions/orderActions";
 import LoadingBox from "../components/LoadingBox";
 import MessageBox from "../components/MessageBox";
@@ -26,6 +27,8 @@ export default function OrderScreen(props) {
   const [selectedBid, setSelectedBid] = useState(null);
   const [justificationNeeded, setJustificationNeeded] = useState(false);
   const [justification, setJustification] = useState("");
+  const [clerkWarning, setClerkWarning] = useState("");
+  const [shipperWarning, setShipperWarning] = useState("");
   const orderPay = useSelector((state) => state.orderPay);
   const {
     loading: loadingPay,
@@ -68,6 +71,10 @@ export default function OrderScreen(props) {
           setSdkReady(true);
         }
       }
+      if (order.complain) {
+        setClerkWarning(order.complain.clerkWarning);
+        setShipperWarning(order.complain.shipperWarning);
+      }
     }
   }, [dispatch, orderId, sdkReady, successPay, successDeliver, order]);
 
@@ -87,6 +94,10 @@ export default function OrderScreen(props) {
         setJustificationNeeded(true);
       }
     }
+  };
+
+  const complainOnOrderHandler = (_) => {
+    dispatch(complainOnOrder(order._id, clerkWarning, shipperWarning));
   };
 
   useEffect(() => {
@@ -170,73 +181,113 @@ export default function OrderScreen(props) {
                 </ul>
               </div>
             </li>
-            <li>
-              <div className="card card-body">
-                <h2>Shipper Bids</h2>
-                <ul>
-                  {order.shipperBids.map((item) => (
-                    <li key={item._id}>
-                      <div
-                        className={`row ${
-                          order.shipper === item.shipperId ||
-                          order.shipper?._id === item.shipperId ||
-                          selectedBid?.shipperId === item.shipperId
-                            ? "highlight-row"
-                            : ""
-                        }`}
-                      >
-                        <div className="min-30">{item.shipperName}</div>
+            {(userInfo.isSeller || userInfo.isAdmin) && (
+              <li>
+                <div className="card card-body">
+                  <h2>Shipper Bids</h2>
+                  <ul>
+                    {order.shipperBids.map((item) => (
+                      <li key={item._id}>
+                        <div
+                          className={`row ${
+                            order.shipper === item.shipperId ||
+                            order.shipper?._id === item.shipperId ||
+                            selectedBid?.shipperId === item.shipperId
+                              ? "highlight-row"
+                              : ""
+                          }`}
+                        >
+                          <div className="min-30">{item.shipperName}</div>
 
-                        <div>${item.price}</div>
+                          <div>${item.price}</div>
 
-                        <div>
-                          <button
-                            onClick={() => {
-                              setSelectedBid(item);
-                              setJustificationNeeded(false);
-                            }}
-                            disabled={order.shipper}
-                          >
-                            {order.shipper === item.shipperId ||
-                            order.shipper?._id === item.shipperId
-                              ? "Selected"
-                              : "Select"}
-                          </button>
+                          <div>
+                            <button
+                              onClick={() => {
+                                setSelectedBid(item);
+                                setJustificationNeeded(false);
+                              }}
+                              disabled={order.shipper}
+                            >
+                              {order.shipper === item.shipperId ||
+                              order.shipper?._id === item.shipperId
+                                ? "Selected"
+                                : "Select"}
+                            </button>
+                          </div>
                         </div>
-                      </div>
-                    </li>
-                  ))}
-                  {justificationNeeded && (
-                    <li>
-                      <div>
-                        <textarea
-                          placeholder="Please provide justification"
-                          style={{ width: "97%" }}
-                          value={justification}
-                          onChange={(e) => setJustification(e.target.value)}
-                        ></textarea>
-                      </div>
-                    </li>
-                  )}
-                  {selectedBid && (
-                    <button
-                      onClick={() =>
-                        dispatch(
-                          selectBid(
-                            orderId,
-                            selectedBid.price,
-                            selectedBid.shipperId,
-                            justification
+                      </li>
+                    ))}
+                    {justificationNeeded && (
+                      <li>
+                        <div>
+                          <textarea
+                            placeholder="Please provide justification"
+                            style={{ width: "97%" }}
+                            value={justification}
+                            onChange={(e) => setJustification(e.target.value)}
+                            disabled={order.shipper}
+                          ></textarea>
+                        </div>
+                      </li>
+                    )}
+                    {selectedBid && (
+                      <button
+                        disabled={order.shipper}
+                        onClick={() =>
+                          dispatch(
+                            selectBid(
+                              orderId,
+                              selectedBid.price,
+                              selectedBid.shipperId,
+                              justification
+                            )
                           )
-                        )
-                      }
-                    >
+                        }
+                      >
+                        Save
+                      </button>
+                    )}
+                  </ul>
+                </div>
+              </li>
+            )}
+
+            {order.isDelivered && order.user === userInfo._id && (
+              <li>
+                <div className="card card-body">
+                  <h2>Complain To</h2>
+                  <ul>
+                    <textarea
+                      placeholder="Clerk"
+                      style={{ width: "97%" }}
+                      value={clerkWarning}
+                      onChange={(e) => setClerkWarning(e.target.value)}
+                    ></textarea>
+                    <br />
+                    <br />
+                    <textarea
+                      placeholder="Shipper"
+                      style={{ width: "97%" }}
+                      value={shipperWarning}
+                      onChange={(e) => setShipperWarning(e.target.value)}
+                    ></textarea>
+                    {/* <textarea
+                      placeholder="Purchased Items"
+                      style={{ width: "97%" }}
+                      // value={justification}
+                      // onChange={(e) => setJustification(e.target.value)}
+                    ></textarea> */}
+                    <br />
+                    <br />
+
+                    <button onClick={() => complainOnOrderHandler()}>
                       Save
                     </button>
-                  )}
-                </ul>
-              </div>
-            </li>
+                  </ul>
+                </div>
+              </li>
+            )}
           </ul>
         </div>
         <div className="col-1">

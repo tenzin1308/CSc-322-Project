@@ -33,6 +33,9 @@ import {
   CHANGE_STATUS_REQUEST,
   CHANGE_STATUS_SUCCESS,
   CHANGE_STATUS_FAIL,
+  COMPLAIN_ON_ORDER_REQUEST,
+  COMPLAIN_ON_ORDER_SUCCESS,
+  COMPLAIN_ON_ORDER_FAIL,
 } from "../constants/orderConstants";
 
 export const createOrder = (order) => async (dispatch, getState) => {
@@ -269,7 +272,10 @@ export const selectBid = (orderId, price, shipperId, justification) => async (
   }
 };
 
-export const changeOrderStatus = (orderId, status) => async (dispatch, getState) => {
+export const changeOrderStatus = (orderId, status) => async (
+  dispatch,
+  getState
+) => {
   dispatch({ type: CHANGE_STATUS_REQUEST });
   const {
     userSignin: { userInfo },
@@ -294,5 +300,38 @@ export const changeOrderStatus = (orderId, status) => async (dispatch, getState)
         ? error.response.data.message
         : error.message;
     dispatch({ type: CHANGE_STATUS_FAIL, payload: message });
+  }
+};
+
+export const complainOnOrder = (
+  orderId,
+  clerkWarning,
+  shipperWarning
+) => async (dispatch, getState) => {
+  dispatch({ type: COMPLAIN_ON_ORDER_REQUEST });
+  const {
+    userSignin: { userInfo },
+  } = getState();
+  try {
+    const { data } = await Axios.post(
+      `/api/orders/${orderId}/warning`,
+      {
+        clerkWarning,
+        shipperWarning,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      }
+    );
+    dispatch({ type: COMPLAIN_ON_ORDER_SUCCESS, payload: data });
+  } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+    alert(message);
+    dispatch({ type: COMPLAIN_ON_ORDER_SUCCESS, payload: message });
   }
 };
