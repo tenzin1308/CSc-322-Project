@@ -6,6 +6,7 @@ export default function ProductScreen(props) {
   var Filter = require("bad-words"),
     filter = new Filter();
 
+
   const state = {
     button: 1,
   };
@@ -26,6 +27,21 @@ export default function ProductScreen(props) {
     }
   };
   return (
+
+        if (state.button === 1) {
+            console.log("Add button clicked!");
+            filter.addWords(tabooWord);
+            console.log(filter.clean(tabooWord));    
+                   
+        }
+        if (state.button === 2) {
+            console.log("Remove button clicked!");
+            filter.removeWords(tabooWord);
+            console.log(filter.clean(tabooWord));   
+        }  
+    };
+    return (
+
     <div>
       <h2>
         <center>Add/Remove Taboo word to Black List</center>
