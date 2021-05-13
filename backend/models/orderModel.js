@@ -56,10 +56,19 @@ const orderSchema = new mongoose.Schema(
       clerkWarning: String,
       warnBy: String,
     },
+    trackingNo: { type: String, default: uuidv4() },
   },
   {
     timestamps: true,
   }
 );
+
+function uuidv4() {
+  return '4xxx-yxxx-xxxx'.replace(/[xy]/g, function(c) {
+    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+
 const Order = mongoose.model("Order", orderSchema);
 export default Order;

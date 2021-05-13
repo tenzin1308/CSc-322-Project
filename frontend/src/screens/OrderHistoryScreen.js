@@ -4,6 +4,7 @@ import {
   listOrderMine,
   bidOnOrder,
   changeOrderStatus,
+  deliverOrder,
 } from "../actions/orderActions";
 import LoadingBox from "../components/LoadingBox";
 import MessageBox from "../components/MessageBox";
@@ -58,9 +59,25 @@ export default function OrderHistoryScreen(props) {
                 <td>{order.totalPrice.toFixed(2)}</td>
                 <td>{order.isPaid ? order.paidAt?.substring(0, 10) : "No"}</td>
                 <td>
-                  {order.isDelivered
-                    ? order.deliveredAt?.substring(0, 10)
-                    : "No"}
+                  {(() => {
+                    if (order.isDelivered) {
+                      return order.deliveredAt?.substring(0, 10);
+                    } else if (isMyShipping(order.shipper)) {
+                      return (
+                        <button
+                          type="button"
+                          className="small"
+                          onClick={() => {
+                            dispatch(deliverOrder(order._id));
+                          }}
+                        >
+                          Deliver Now
+                        </button>
+                      );
+                    } else {
+                      return "No";
+                    }
+                  })()}
                 </td>
                 <td>
                   <input

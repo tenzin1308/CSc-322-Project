@@ -179,6 +179,7 @@ export const deliverOrder = (orderId) => async (dispatch, getState) => {
       }
     );
     dispatch({ type: ORDER_DELIVER_SUCCESS, payload: data });
+    dispatch(listOrderMine())
   } catch (error) {
     const message =
       error.response && error.response.data.message
@@ -326,6 +327,7 @@ export const complainOnOrder = (
       }
     );
     dispatch({ type: COMPLAIN_ON_ORDER_SUCCESS, payload: data });
+    dispatch(detailsOrder(orderId));
   } catch (error) {
     const message =
       error.response && error.response.data.message

@@ -24,6 +24,7 @@ import SellerRoute from './components/SellerRoute';
 import SellerScreen from './screens/SellerScreen';
 import SearchBox from './components/SearchBox';
 import SearchScreen from './screens/SearchScreen';
+import DiscussionScreen from './screens/DiscussionScreen';
 import { listProductCategories } from './actions/productActions';
 import LoadingBox from './components/LoadingBox';
 import MessageBox from './components/MessageBox';
@@ -75,6 +76,9 @@ function App() {
             ></Route>
           </div>
           <div>
+            <Link to="/discussion">
+              Discussions
+            </Link>
             <Link to="/cart">
               Cart
               {cartItems.length > 0 && (
@@ -177,6 +181,7 @@ function App() {
         <main>
           <Route path="/seller/:id" component={SellerScreen}></Route>
           <Route path="/cart/:id?" component={CartScreen}></Route>
+          <Route path="/discussion" component={DiscussionScreen}></Route>
           <Route path="/product/:id" component={ProductScreen} exact></Route>
           <Route
             path="/product/:id/edit"
