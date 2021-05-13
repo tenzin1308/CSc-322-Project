@@ -47,6 +47,7 @@ export default function UserListScreen(props) {
               <th>ID</th>
               <th>NAME</th>
               <th>EMAIL</th>
+              <th>Warnings</th>
               <th>IS SELLER</th>
               <th>IS ADMIN</th>
               <th>IS Blocked</th>
@@ -55,10 +56,12 @@ export default function UserListScreen(props) {
           </thead>
           <tbody>
             {users.map((user) => (
+              console.log('user',user),
               <tr key={user._id}>
                 <td>{user._id}</td>
                 <td>{user.name}</td>
                 <td>{user.email}</td>
+                <td>{user.warnings?.length}</td>
                 <td>{user.isSeller ? 'YES' : ' NO'}</td>
                 <td>{user.isAdmin ? 'YES' : 'NO'}</td>
                 <td>{user.isBlocked ? 'YES' : ' NO'}</td>

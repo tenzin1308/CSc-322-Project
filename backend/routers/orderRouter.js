@@ -188,7 +188,9 @@ orderRouter.put(
               description: `select high price bid without justification on order ${order._id}`,
             },
           ];
-
+          if (seller.warnings.length >= 3) {
+            seller.isBlocked = true;
+          }
           await seller.save();
         }
       }
@@ -319,7 +321,9 @@ orderRouter.post(
           clerkWarning,
           warnBy: req.user._id,
         };
-
+        if (seller.warnings.length >= 3) {
+          seller.isBlocked = true;
+        }
         const updatedSeller = await seller.save();
       }
       if (shipperWarning) {
@@ -338,7 +342,9 @@ orderRouter.post(
           shipperWarning,
           warnBy: req.user._id,
         };
-
+        if (shipper.warnings.length >= 3) {
+          shipper.isBlocked = true;
+        }
         const updatedShipper = await shipper.save();
       }
       const updatedOrder = await order.save();

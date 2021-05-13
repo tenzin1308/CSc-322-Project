@@ -245,6 +245,22 @@ export default function ProfileScreen() {
           </form>
         </div>
       )}
+
+      <div>
+        <form className="form" onSubmit={submitHomeAddressHandler}>
+          <h1>Warnings</h1>
+          <ol>
+            {user?.warnings?.map((warning) => {
+              return (
+                <li key={warning._id}>
+                  {" "}
+                  <strong>{warning.reason}</strong> {warning.description}
+                </li>
+              );
+            })}
+          </ol>
+        </form>
+      </div>
     </div>
   );
 }
