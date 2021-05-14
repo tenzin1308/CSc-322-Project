@@ -33,7 +33,7 @@ import {
   userUpdateProfileReducer,
   userUpdateReducer,
 } from "./reducers/userReducers";
-import { addTabooReducer, getDiscussionReducer } from "./reducers/tabooReducers";
+import { addTabooReducer, getDiscussionReducer, getTabooWordsReducer } from "./reducers/tabooReducers";
 
 const initialState = {
   userSignin: {
@@ -81,6 +81,7 @@ const reducer = combineReducers({
   addTaboo: addTabooReducer,
   complainOnOrder: complainOnOrderReducer,
   getDiscussion: getDiscussionReducer,
+  getTabooWords: getTabooWordsReducer,
 });
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(
